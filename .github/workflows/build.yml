@@ -1,7 +1,6 @@
-name: CI build
+name: Build pipeline
 
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
