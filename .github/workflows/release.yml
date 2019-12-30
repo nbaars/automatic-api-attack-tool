@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Build project # This would actually build your project, using zip for an example artifact
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Build project
         run: |
           ./gradlew clean build
       - name: Create release
@@ -33,5 +36,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./build/libs/imperva-api-attack-tool.jar
-          asset_name: imperva-api-attack-tool-${{github.ref}}.jar
+          asset_name: imperva-api-attack-tool-${{ steps.get_version.outputs.VERSION }}.jar
           asset_content_type: application/zip
